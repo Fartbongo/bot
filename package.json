@@ -1,0 +1,21 @@
+{
+  "name": "my-twitch-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "music21j": "^0.16.5",
+    "node-aplay": "^1.0.3",
+    "node-wav-player": "^1.0.0",
+    "play-sound": "^1.1.6",
+    "sound-play": "^1.1.0",
+    "tmi.js": "^1.8.5",
+    "tone": "^15.0.4"
+  }
+}
