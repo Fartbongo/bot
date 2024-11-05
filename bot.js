@@ -26,7 +26,7 @@ const charToNote = {
     'p': 'a.wav', 'q': 'b.wav', 'r': 'c.wav',
     's': 'e.wav', 't': 'f.wav', 'g': 'u.wav',
     'v': 'a.wav', 'b': 'w.wav', 'c': 'x.wav',
-    'y': 'f.wav', 'e': 'z.wav',
+    'y': 'f.wav', 'z': 'e.wav',
     ' ': 'rest.wav'
 };
 
