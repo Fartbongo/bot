@@ -11,10 +11,10 @@
             font-family: Arial, sans-serif;
         }
         .letter {
-            font-size: 2em;
+            font-size: 4em;  /* Increase the size of the letters */
             display: inline-block;
             margin: 5px;
-            animation: pop 1s ease-in-out, float 3s infinite;
+            animation: pop 1s ease-in-out, float 3s infinite, distort 1.5s infinite;
             position: relative;
         }
         @keyframes pop {
@@ -26,6 +26,13 @@
             0% { top: 0; }
             50% { top: -20px; }
             100% { top: 0; }
+        }
+        @keyframes distort {
+            0% { transform: skew(0deg, 0deg) rotate(0deg); }
+            25% { transform: skew(20deg, 10deg) rotate(5deg); }
+            50% { transform: skew(-20deg, -10deg) rotate(-5deg); }
+            75% { transform: skew(20deg, 10deg) rotate(5deg); }
+            100% { transform: skew(0deg, 0deg) rotate(0deg); }
         }
     </style>
 </head>
