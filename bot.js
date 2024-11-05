@@ -47,7 +47,8 @@ function playNextInQueue() {
         if (error) {
             console.error(`Error playing note ${noteFile}: ${error}`);
         }
-        playNextInQueue();
+        // Add a delay of 300ms (adjust as needed for musicality)
+        setTimeout(playNextInQueue, 300);
     });
 }
 
