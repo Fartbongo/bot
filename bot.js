@@ -50,13 +50,8 @@ function playNextInQueue() {
         setTimeout(playNextInQueue, 300);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error}`);
-        // Handle specific errors and continue the queue
-        if (error.message.includes('wav') || error.message.includes('play')) {
-            console.error(`Skipping problematic file: ${noteFile}`);
-            setTimeout(playNextInQueue, 300);
-        } else {
-            console.error(`Unhandled error: ${error}`);
-        }
+        // Skip the problematic file and continue the queue
+        setTimeout(playNextInQueue, 300);
     });
 }
 
