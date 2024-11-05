@@ -59,15 +59,14 @@ function playNoteFromMessage(message) {
         if (chars[i] in charToNote) {
             let noteFile = path.join(__dirname, charToNote[chars[i]]);
             queue.push(noteFile);
-
-            if (chars[i + 1] === ' ' && i < chars.length - 1) {
-                let restFile = path.join(__dirname, charToNote[' ']);
-                queue.push(restFile);
-            }
-
             if (!isPlaying) {
                 playNextInQueue();
             }
+        }
+        // Add a rest after punctuation
+        if (i < chars.length - 1 && chars[i] in charToNote && ['.', ',', '!', '?'].includes(chars[i])) {
+            let restFile = path.join(__dirname, charToNote[' ']);
+            queue.push(restFile);
         }
     }
 }
