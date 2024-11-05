@@ -28,13 +28,12 @@ const charToNote = {
     'v': 'v.wav', 'w': 'w.wav', 'x': 'x.wav',
     'y': 'y.wav', 'z': 'z.wav',
     ' ': 'rest.wav',  // Use the silent rest sound file
-    '.': 'period.wav', ',': 'comma.wav', '!': 'exclamation.wav', '?': 'question.wav'  // Ensure these files exist
+    '.': 'period.wav', ',': 'comma.wav', '!': 'exclamation.wav', '?': 'question.wav'
 };
 
 // Queue to manage sound playback
 const queue = [];
 let isPlaying = false;
-const throttleDuration = 100; // Adjust the throttle duration as needed
 
 function playNextInQueue() {
     if (queue.length === 0) {
@@ -55,25 +54,15 @@ function playNextInQueue() {
 }
 
 function playNoteFromMessage(message) {
-    const chars = message.toLowerCase().split('');
-    let index = 0;
-
-    function enqueueChar() {
-        if (index >= chars.length) return;
-
-        const char = chars[index];
+    for (let char of message.toLowerCase()) {
         if (char in charToNote) {
-            const noteFile = path.join(__dirname, charToNote[char]);
+            let noteFile = path.join(__dirname, charToNote[char]);
             queue.push(noteFile);
             if (!isPlaying) {
                 playNextInQueue();
             }
         }
-        index++;
-        setTimeout(enqueueChar, throttleDuration); // Throttle adding characters to the queue
     }
-
-    enqueueChar();
 }
 
 // Register event handlers
