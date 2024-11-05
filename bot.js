@@ -1,6 +1,6 @@
 const tmi = require('tmi.js');
 const path = require('path');
-const { exec } = require('child_process');
+const player = require('node-wav-player');
 
 // Define configuration options
 const opts = {
@@ -43,12 +43,13 @@ function playNextInQueue() {
 
     isPlaying = true;
     const noteFile = queue.shift();
-    exec(`mpg123 ${noteFile}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error playing note ${noteFile}: ${error}`);
-        }
-        // Add a delay of 300ms (adjust as needed for musicality)
-        setTimeout(playNextInQueue, 300);
+    player.play({ path: noteFile }).then(() => {
+        // Add a delay of 500ms (adjust as needed for musicality)
+        setTimeout(playNextInQueue, 500);
+    }).catch((error) => {
+        console.error(`Error playing note ${noteFile}: ${error}`);
+        // Continue to the next file even if there's an error
+        setTimeout(playNextInQueue, 500);
     });
 }
 
