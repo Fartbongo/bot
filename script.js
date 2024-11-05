@@ -14,8 +14,23 @@ function showLetter(letter) {
     }, 1000); // Remove the letter after 1 second
 }
 
-// Simulate receiving letters from the bot
-const testMessage = "hello world";
-testMessage.split('').forEach((letter, index) => {
-    setTimeout(() => showLetter(letter), index * 500);
-});
+// WebSocket connection to the server
+const socket = new WebSocket('ws://localhost:8080');
+
+socket.onopen = () => {
+    console.log('WebSocket connection established.');
+};
+
+socket.onmessage = (event) => {
+    const letter = event.data;
+    console.log(`Received: ${letter}`);
+    showLetter(letter);
+};
+
+socket.onclose = () => {
+    console.log('WebSocket connection closed.');
+};
+
+socket.onerror = (error) => {
+    console.error(`WebSocket error: ${error}`);
+};
