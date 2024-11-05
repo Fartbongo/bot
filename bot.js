@@ -20,8 +20,8 @@ const client = new tmi.Client(opts);
 const charToNote = {
     'a': 'a.wav', 'b': 'e.wav', 'c': 'c.wav',
     'd': 'f.wav', 'e': 'e.wav', 'f': 'f.wav',
-    'g': 'g.wav', 'a': 'h.wav', 'i': 'c.wav',
-    'b': 'j.wav', 'c': 'k.wav', 'l': 'd.wav',
+    'g': 'g.wav', 'h': 'a.wav', 'i': 'b.wav',
+    'j': 'c.wav', 'k': 'f.wav', 'l': 'e.wav',
     'm': 'e.wav', 'n': 'f.wav', 'o': 'g.wav',
     'p': 'a.wav', 'q': 'b.wav', 'r': 'c.wav',
     's': 'e.wav', 't': 'f.wav', 'g': 'u.wav',
