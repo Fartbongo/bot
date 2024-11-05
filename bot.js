@@ -43,6 +43,7 @@ function playNextInQueue() {
 
     isPlaying = true;
     const noteFile = queue.shift();
+    console.log(`Playing: ${noteFile}`);
     player.play({ path: noteFile }).then(() => {
         setTimeout(playNextInQueue, 300);
     }).catch((error) => {
@@ -52,9 +53,11 @@ function playNextInQueue() {
 }
 
 function playNoteFromMessage(message) {
-    for (let char of message.toLowerCase()) {
-        if (char in charToNote) {
-            let noteFile = path.join(__dirname, charToNote[char]);
+    const chars = message.toLowerCase().split('');
+    for (let i = 0; i < chars.length; i++) {
+        if (chars[i] in charToNote) {
+            let noteFile = path.join(__dirname, charToNote[chars[i]]);
+            console.log(`Queuing: ${noteFile}`);
             queue.push(noteFile);
             if (!isPlaying) {
                 playNextInQueue();
