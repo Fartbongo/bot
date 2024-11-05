@@ -18,15 +18,15 @@ const client = new tmi.Client(opts);
 
 // Define a mapping for characters to notes (punctuation removed)
 const charToNote = {
-    'a': 'a.wav', 'b': 'b.wav', 'c': 'c.wav',
-    'd': 'd.wav', 'e': 'e.wav', 'f': 'f.wav',
-    'g': 'g.wav', 'h': 'h.wav', 'i': 'i.wav',
-    'j': 'j.wav', 'k': 'k.wav', 'l': 'l.wav',
-    'm': 'm.wav', 'n': 'n.wav', 'o': 'o.wav',
-    'p': 'p.wav', 'q': 'q.wav', 'r': 'r.wav',
-    's': 's.wav', 't': 't.wav', 'u': 'u.wav',
-    'v': 'v.wav', 'w': 'w.wav', 'x': 'x.wav',
-    'y': 'y.wav', 'z': 'z.wav',
+    'a': 'a.wav', 'b': 'e.wav', 'c': 'c.wav',
+    'd': 'f.wav', 'e': 'e.wav', 'f': 'f.wav',
+    'g': 'g.wav', 'a': 'h.wav', 'i': 'c.wav',
+    'b': 'j.wav', 'c': 'k.wav', 'l': 'd.wav',
+    'm': 'e.wav', 'n': 'f.wav', 'o': 'g.wav',
+    'p': 'a.wav', 'q': 'b.wav', 'r': 'c.wav',
+    's': 'e.wav', 't': 'f.wav', 'g': 'u.wav',
+    'v': 'a.wav', 'b': 'w.wav', 'c': 'x.wav',
+    'y': 'f.wav', 'e': 'z.wav',
     ' ': 'rest.wav'
 };
 
