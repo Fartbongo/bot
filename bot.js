@@ -31,36 +31,35 @@ const charToNote = {
     '.': 'period.wav', ',': 'comma.wav', '!': 'exclamation.wav', '?': 'question.wav'
 };
 
-// Queue to manage sound playback
+// Queue to manage sound playback and step counter
 const queue = [];
 let isPlaying = false;
+let steps = 0;
 
 function playNextInQueue() {
-    if (queue.length === 0) {
+    if (queue.length === 0 && steps === 0) {
         console.log("Queue is empty, stopping playback.");
         isPlaying = false;
         return;
     }
 
-    isPlaying = true;
-    const noteFile = queue.shift();
-    console.log(`Playing: ${noteFile}`);
-    player.play({ path: noteFile })
-        .then(() => {
-            console.log(`Finished playing: ${noteFile}`);
-            setTimeout(() => {
-                isPlaying = false;
-                playNextInQueue();
-            }, 300);
-        })
-        .catch((error) => {
-            console.error(`Error playing note ${noteFile}: ${error.message}`);
-            // Retry playing the next sound
-            setTimeout(() => {
-                isPlaying = false;
-                playNextInQueue();
-            }, 300);
-        });
+    if (queue.length > 0) {
+        isPlaying = true;
+        const noteFile = queue.shift();
+        console.log(`Playing: ${noteFile}`);
+        player.play({ path: noteFile })
+            .then(() => {
+                console.log(`Finished playing: ${noteFile}`);
+                steps--;
+                setTimeout(playNextInQueue, 300);
+            })
+            .catch((error) => {
+                console.error(`Error playing note ${noteFile}: ${error.message}`);
+                // Skip the problematic file and continue the queue
+                steps--;
+                setTimeout(playNextInQueue, 300);
+            });
+    }
 }
 
 function playNoteFromMessage(message) {
@@ -70,6 +69,7 @@ function playNoteFromMessage(message) {
             let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile}`);
             queue.push(noteFile);
+            steps++;
         } else {
             console.warn(`Character ${char} not mapped to any sound.`);
         }
