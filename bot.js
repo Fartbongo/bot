@@ -65,16 +65,20 @@ function playNextInQueue() {
 
 function playNoteFromMessage(message) {
     const chars = message.toLowerCase().split('');
-    for (let char of chars) {
+    chars.forEach((char, index) => {
         if (char in charToNote) {
             let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile}`);
             queue.push(noteFile);
+            if (index === chars.length - 1) {
+                if (!isPlaying) {
+                    playNextInQueue();
+                }
+            }
+        } else {
+            console.warn(`Character ${char} not mapped to any sound.`);
         }
-    }
-    if (!isPlaying) {
-        playNextInQueue();
-    }
+    });
 }
 
 // Register event handlers
