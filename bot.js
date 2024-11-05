@@ -27,7 +27,7 @@ const charToNote = {
     's': 's.wav', 't': 't.wav', 'u': 'u.wav',
     'v': 'v.wav', 'w': 'w.wav', 'x': 'x.wav',
     'y': 'y.wav', 'z': 'z.wav',
-    ' ': 'rest.wav',  // Use the silent rest sound file
+    ' ': 'rest.wav',
     '.': 'period.wav', ',': 'comma.wav', '!': 'exclamation.wav', '?': 'question.wav'
 };
 
@@ -44,36 +44,28 @@ function playNextInQueue() {
     isPlaying = true;
     const noteFile = queue.shift();
     player.play({ path: noteFile }).then(() => {
-        // Add a delay of 300ms (adjust as needed for musicality)
         setTimeout(playNextInQueue, 300);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error}`);
-        // Continue to the next file even if there's an error
         setTimeout(playNextInQueue, 300);
     });
 }
 
 function playNoteFromMessage(message) {
-    const chars = message.toLowerCase().split('');
-    for (let i = 0; i < chars.length; i++) {
-        if (chars[i] in charToNote) {
-            let noteFile = path.join(__dirname, charToNote[chars[i]]);
+    for (let char of message.toLowerCase()) {
+        if (char in charToNote) {
+            let noteFile = path.join(__dirname, charToNote[char]);
             queue.push(noteFile);
             if (!isPlaying) {
                 playNextInQueue();
             }
-        }
-        // Add a rest after punctuation
-        if (i < chars.length - 1 && chars[i] in charToNote && ['.', ',', '!', '?'].includes(chars[i])) {
-            let restFile = path.join(__dirname, charToNote[' ']);
-            queue.push(restFile);
         }
     }
 }
 
 // Register event handlers
 client.on('message', (channel, tags, message, self) => {
-    if (self) return;  // Ignore messages from the bot itself
+    if (self) return;
     console.log(`${tags['display-name']}: ${message}`);
     playNoteFromMessage(message);
 });
