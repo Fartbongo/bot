@@ -55,7 +55,7 @@ function playNextInQueue() {
         })
         .catch((error) => {
             console.error(`Error playing note ${noteFile}: ${error.message}`);
-            // Skip the problematic file and continue the queue
+            // Retry playing the next sound
             setTimeout(() => {
                 isPlaying = false;
                 playNextInQueue();
@@ -70,15 +70,13 @@ function playNoteFromMessage(message) {
             let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile}`);
             queue.push(noteFile);
-            if (index === chars.length - 1) {
-                if (!isPlaying) {
-                    playNextInQueue();
-                }
-            }
         } else {
             console.warn(`Character ${char} not mapped to any sound.`);
         }
     });
+    if (!isPlaying) {
+        playNextInQueue();
+    }
 }
 
 // Register event handlers
