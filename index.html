@@ -5,11 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Bot Display</title>
     <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
         .letter {
             font-size: 2em;
             display: inline-block;
             margin: 5px;
-            transition: color 0.5s ease-in-out;
+            animation: pop 1s ease-in-out, float 3s infinite;
+            position: relative;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 0; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        @keyframes float {
+            0% { top: 0; }
+            50% { top: -20px; }
+            100% { top: 0; }
         }
     </style>
 </head>

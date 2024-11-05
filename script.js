@@ -1,6 +1,6 @@
 const display = document.getElementById('display');
 
-const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
+const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
 
 function showLetter(letter) {
     const span = document.createElement('span');
@@ -11,7 +11,7 @@ function showLetter(letter) {
 
     setTimeout(() => {
         span.remove();
-    }, 1000); // Remove the letter after 1 second
+    }, 3000); // Remove the letter after 3 seconds
 }
 
 // WebSocket connection to the server
