@@ -44,7 +44,7 @@ function playNextInQueue() {
     isPlaying = true;
     const noteFile = queue.shift();
     player.play({ path: noteFile }).then(() => {
-        // Add a delay of 300ms (shortened for quicker transitions)
+        // Add a delay of 300ms (adjust as needed for musicality)
         setTimeout(playNextInQueue, 300);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error}`);
@@ -54,10 +54,17 @@ function playNextInQueue() {
 }
 
 function playNoteFromMessage(message) {
-    for (let char of message.toLowerCase()) {
-        if (char in charToNote) {
-            let noteFile = path.join(__dirname, charToNote[char]);
+    const chars = message.toLowerCase().split('');
+    for (let i = 0; i < chars.length; i++) {
+        if (chars[i] in charToNote) {
+            let noteFile = path.join(__dirname, charToNote[chars[i]]);
             queue.push(noteFile);
+
+            if (chars[i + 1] === ' ' && i < chars.length - 1) {
+                let restFile = path.join(__dirname, charToNote[' ']);
+                queue.push(restFile);
+            }
+
             if (!isPlaying) {
                 playNextInQueue();
             }
