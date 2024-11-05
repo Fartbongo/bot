@@ -37,6 +37,7 @@ let isPlaying = false;
 
 function playNextInQueue() {
     if (queue.length === 0) {
+        console.log("Queue is empty, stopping playback.");
         isPlaying = false;
         return;
     }
@@ -45,24 +46,31 @@ function playNextInQueue() {
     const noteFile = queue.shift();
     console.log(`Playing: ${noteFile}`);
     player.play({ path: noteFile }).then(() => {
+        console.log(`Finished playing: ${noteFile}`);
         setTimeout(playNextInQueue, 300);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error}`);
-        setTimeout(playNextInQueue, 300);
+        // Handle specific errors and continue the queue
+        if (error.message.includes('wav') || error.message.includes('play')) {
+            console.error(`Skipping problematic file: ${noteFile}`);
+            setTimeout(playNextInQueue, 300);
+        } else {
+            console.error(`Unhandled error: ${error}`);
+        }
     });
 }
 
 function playNoteFromMessage(message) {
     const chars = message.toLowerCase().split('');
-    for (let i = 0; i < chars.length; i++) {
-        if (chars[i] in charToNote) {
-            let noteFile = path.join(__dirname, charToNote[chars[i]]);
+    for (let char of chars) {
+        if (char in charToNote) {
+            let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile}`);
             queue.push(noteFile);
-            if (!isPlaying) {
-                playNextInQueue();
-            }
         }
+    }
+    if (!isPlaying) {
+        playNextInQueue();
     }
 }
 
