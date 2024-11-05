@@ -22,15 +22,15 @@ const client = new tmi.Client(opts);
 
 // Define a mapping for characters to notes
 const charToNote = {
-    'a': 'c.wav', 'b': 'f.wav', 'c': 'g.wav',
-    'd': 'c.wav', 'e': 'f.wav', 'f': 'g.wav',
-    'g': 'c.wav', 'h': 'f.wav', 'i': 'g.wav',
-    'j': 'c.wav', 'k': 'f.wav', 'l': 'g.wav',
-    'm': 'c.wav', 'n': 'f.wav', 'o': 'g.wav',
-    'p': 'c.wav', 'q': 'f.wav', 'r': 'g.wav',
-    's': 'c.wav', 't': 'f.wav', 'u': 'g.wav',
-    'v': 'c.wav', 'w': 'f.wav', 'x': 'g.wav',
-    'y': 'c.wav', 'z': 'f.wav', ' ': 'rest.wav'
+    'a': 'a.wav', 'b': 'b.wav', 'c': 'c.wav',
+    'd': 'd.wav', 'e': 'e.wav', 'f': 'f.wav',
+    'g': 'g.wav', 'h': 'd.wav', 'i': 'b.wav',
+    'j': 'c.wav', 'k': 'd.wav', 'l': 'e.wav',
+    'm': 'f.wav', 'n': 'g.wav', 'o': 'a.wav',
+    'p': 'b.wav', 'q': 'c.wav', 'r': 'd.wav',
+    's': 'e.wav', 't': 'f.wav', 'u': 'g.wav',
+    'v': 'a.wav', 'w': 'b.wav', 'x': 'c.wav',
+    'y': 'd.wav', 'z': 'e.wav', ' ': 'rest.wav'
 };
 
 const queue = [];
