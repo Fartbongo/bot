@@ -31,18 +31,35 @@ const charToNote = {
     '.': 'period.wav', ',': 'comma.wav', '!': 'exclamation.wav', '?': 'question.wav'  // Ensure these files exist
 };
 
+// Queue to manage sound playback
+const queue = [];
+let isPlaying = false;
+
+function playNextInQueue() {
+    if (queue.length === 0) {
+        isPlaying = false;
+        return;
+    }
+
+    isPlaying = true;
+    const noteFile = queue.shift();
+    exec(`mpg123 ${noteFile}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error playing note ${noteFile}: ${error}`);
+        }
+        playNextInQueue();
+    });
+}
+
 // Function to play notes based on message content
 function playNoteFromMessage(message) {
     for (let char of message.toLowerCase()) {
         if (char in charToNote) {
             let noteFile = path.join(__dirname, charToNote[char]);
-            exec(`mpg123 ${noteFile}`, (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error playing note ${noteFile}: ${error}`);
-                    return;
-                }
-                console.log(`Played note: ${noteFile}`);
-            });
+            queue.push(noteFile);
+            if (!isPlaying) {
+                playNextInQueue();
+            }
         }
     }
 }
