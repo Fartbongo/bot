@@ -47,11 +47,17 @@ function playNextInQueue() {
     console.log(`Playing: ${noteFile}`);
     player.play({ path: noteFile }).then(() => {
         console.log(`Finished playing: ${noteFile}`);
-        setTimeout(playNextInQueue, 300);
+        setTimeout(() => {
+            isPlaying = false;  // Reset isPlaying flag before calling the next function
+            playNextInQueue();
+        }, 300);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error.message}`);
         // Skip the problematic file and continue the queue
-        setTimeout(playNextInQueue, 300);
+        setTimeout(() => {
+            isPlaying = false;  // Reset isPlaying flag before calling the next function
+            playNextInQueue();
+        }, 300);
     });
 }
 
