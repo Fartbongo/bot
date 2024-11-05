@@ -34,6 +34,7 @@ const charToNote = {
 };
 
 const queue = [];
+const letterQueue = [];
 let isPlaying = false;
 
 function playNextInQueue() {
@@ -45,7 +46,11 @@ function playNextInQueue() {
 
     isPlaying = true;
     const noteFile = queue.shift();
-    console.log(`Playing: ${noteFile}`);
+    const letter = letterQueue.shift();
+
+    console.log(`Playing: ${noteFile} for letter: ${letter}`);
+    broadcastLetter(letter);
+
     player.play({ path: noteFile }).then(() => {
         console.log(`Finished playing: ${noteFile}`);
         setTimeout(playNextInQueue, 300);
@@ -59,9 +64,9 @@ function playNoteFromMessage(message) {
     for (let char of message.toLowerCase()) {
         if (char in charToNote) {
             let noteFile = path.join(__dirname, charToNote[char]);
-            console.log(`Queuing: ${noteFile}`);
+            console.log(`Queuing: ${noteFile} for letter: ${char}`);
             queue.push(noteFile);
-            broadcastLetter(char);
+            letterQueue.push(char);
         } else {
             console.warn(`Character ${char} not mapped to any sound.`);
         }
