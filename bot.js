@@ -62,8 +62,6 @@ function playNoteFromMessage(message) {
             let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile}`);
             queue.push(noteFile);
-        } else {
-            console.error(`Character not found in mapping: ${char}`);
         }
     }
     if (!isPlaying) {
