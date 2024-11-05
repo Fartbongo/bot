@@ -27,8 +27,8 @@ const charToNote = {
     's': 's.wav', 't': 't.wav', 'u': 'u.wav',
     'v': 'v.wav', 'w': 'w.wav', 'x': 'x.wav',
     'y': 'y.wav', 'z': 'z.wav',
-    ' ': 'space.wav',  // Ensure you have a space.wav file
-    '.': 'period.wav', ',': 'comma.wav', '!': 'exclamation.wav', '?': 'question.wav'  // Ensure these files exist
+    ' ': 'rest.wav',  // Use the silent rest sound file
+    '.': 'period.wav', ',': 'comma.wav', '!': 'exclamation.wav', '?': 'question.wav'  // New punctuation sounds
 };
 
 // Queue to manage sound playback
@@ -44,12 +44,12 @@ function playNextInQueue() {
     isPlaying = true;
     const noteFile = queue.shift();
     player.play({ path: noteFile }).then(() => {
-        // Add a delay of 500ms (adjust as needed for musicality)
-        setTimeout(playNextInQueue, 500);
+        // Add a delay of 300ms (shortened for quicker transitions)
+        setTimeout(playNextInQueue, 300);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error}`);
         // Continue to the next file even if there's an error
-        setTimeout(playNextInQueue, 500);
+        setTimeout(playNextInQueue, 300);
     });
 }
 
