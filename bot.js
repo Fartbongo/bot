@@ -45,20 +45,15 @@ function playNextInQueue() {
     isPlaying = true;
     const noteFile = queue.shift();
     console.log(`Playing: ${noteFile}`);
-    player.play({ path: noteFile }).then(() => {
-        console.log(`Finished playing: ${noteFile}`);
-        setTimeout(() => {
-            isPlaying = false;
-            playNextInQueue();
-        }, 300);
-    }).catch((error) => {
-        console.error(`Error playing note ${noteFile}: ${error.message}`);
-        // Skip the problematic file and continue the queue
-        setTimeout(() => {
-            isPlaying = false;
-            playNextInQueue();
-        }, 300);
-    });
+    player.play({ path: noteFile })
+        .then(() => {
+            console.log(`Finished playing: ${noteFile}`);
+            setTimeout(playNextInQueue, 300);
+        })
+        .catch((error) => {
+            console.error(`Error playing note ${noteFile}: ${error.message}`);
+            setTimeout(playNextInQueue, 300);
+        });
 }
 
 function playNoteFromMessage(message) {
