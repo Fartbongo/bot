@@ -1,14 +1,14 @@
 let angle;
 let len = 100;
 let branches = [];
-let letters = [];
 
 function setup() {
     let canvas = createCanvas(800, 600);
     canvas.parent('canvasContainer');
-    angle = PI / 4;
+    angle = PI / 6; // Adjust the angle to spread out the branches more
     background(0);
     stroke(255);
+    frameRate(30); // Set a reasonable frame rate
 }
 
 function branch(x, y, len, angle, alpha, letter) {
@@ -17,16 +17,16 @@ function branch(x, y, len, angle, alpha, letter) {
     rotate(angle);
     stroke(255, alpha);
     line(0, 0, 0, -len);
-    if (len > 4) {
-        branch(0, -len, len * 0.67, angle + PI / 4, alpha * 0.67, letter);
-        branch(0, -len, len * 0.67, angle - PI / 4, alpha * 0.67, letter);
-    }
-    if (len <= 20) {  // Add letters at the end of branches
+    if (len > 10) {  // Adjust the length threshold to control branch density
+        branch(0, -len, len * 0.67, angle + PI / 6, alpha * 0.67, letter);
+        branch(0, -len, len * 0.67, angle - PI / 6, alpha * 0.67, letter);
+    } else if (len <= 20) {  // Add letters at the end of branches
         push();
         translate(0, -len);
         noStroke();
         fill(255);
-        textSize(24);
+        textSize(32); // Adjusted text size for clarity
+        textAlign(CENTER, CENTER); // Center align the text
         text(letter, 0, 0);
         pop();
     }
@@ -36,10 +36,9 @@ function branch(x, y, len, angle, alpha, letter) {
 function updateFractalVisual(message) {
     background(0); // Clear the canvas
     len = 100; // Reset the initial length
-    for (let i = 0; i < message.length; i++) {
-        let char = message.charAt(i).toLowerCase();
-        let x = (i + 1) * (width / (message.length + 1));
-        let y = height / 2;
+    let x = width / 2; // Center the initial x position
+    let y = height / 2; // Center the initial y position
+    for (let char of message.toLowerCase()) {
         branch(x, y, len, -PI / 2, 255, char); // Draw a new branch for each letter
     }
 }
@@ -81,5 +80,5 @@ socket.onerror = (error) => {
 };
 
 function draw() {
-    // We're not using a continuous draw loop here as each update is triggered by WebSocket messages
+    drawBranches(); // Continuously draw branches
 }
