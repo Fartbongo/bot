@@ -1,33 +1,34 @@
 let angle;
-let len = 100;
+let len = 300; // Greatly increase initial length for huge fractals
 let branches = [];
 let letters = [];
+const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
 
 function setup() {
-    let canvas = createCanvas(800, 600);
+    let canvas = createCanvas(1600, 1200); // Increase canvas size
     canvas.parent('canvasContainer');
-    angle = PI / 6; // Adjust the angle for tree branches
+    angle = PI / 4; // Adjust the angle for more spread
     background(0);
-    stroke(255);
     frameRate(60); // Smooth animations
 }
 
-function branch(x, y, len, angle, alpha, letter) {
+function branch(x, y, len, angle, alpha, color, letter) {
     push();
     translate(x, y);
     rotate(angle);
-    stroke(255, alpha);
+    stroke(color);
+    strokeWeight(alpha / 255 * 5); // Vary stroke weight with alpha for bold lines
     line(0, 0, 0, -len);
 
-    if (len > 10) {  // Control branch density
+    if (len > 20) {  // Control branch density with larger threshold
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + PI / 6, alpha * 0.67, letter); // Adjust angle for tree shape
-        branch(nextX, nextY, len * 0.67, angle - PI / 6, alpha * 0.67, letter); // Adjust angle for tree shape
+        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color, letter); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color, letter); // Spread out more
     } else {  // Add letters at the end of branches
         noStroke();
         fill(255);
-        textSize(32);
+        textSize(64); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(letter, 0, -len); // Place letters centrally
     }
@@ -37,13 +38,13 @@ function branch(x, y, len, angle, alpha, letter) {
 
 function updateFractalVisual(message) {
     background(0); // Clear the canvas
-    len = 100; // Reset the initial length
     branches = []; // Reset branches array
     letters = []; // Reset letters array
     let x = width / 2; // Center x position
     let y = height; // Start at the bottom of the canvas
     for (let char of message.toLowerCase()) {
-        branches.push({ x: x, y: y, len: len, angle: -PI / 2, alpha: 255, letter: char });
+        let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
+        branches.push({ x: x, y: y, len: len, angle: -PI / 2, alpha: 255, color: color, letter: char });
         letters.push({ x: x, y: y - len, letter: char }); // Store letter positions
     }
     redraw(); // Trigger a redraw
@@ -54,14 +55,14 @@ function draw() {
 
     // Draw branches
     for (let b of branches) {
-        branch(b.x, b.y, b.len, b.angle, b.alpha, b.letter);
+        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color, b.letter);
     }
 
     // Draw letters on top
     for (let l of letters) {
         noStroke();
         fill(255);
-        textSize(32);
+        textSize(64); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, l.x, l.y); // Draw letters on top
     }
@@ -73,7 +74,6 @@ function draw() {
 
 // WebSocket connection to the server
 const display = document.getElementById('display');
-const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
 
 function showLetter(letter) {
     const span = document.createElement('span');
