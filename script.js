@@ -12,7 +12,7 @@ function setup() {
     frameRate(60); // Smooth animations
 }
 
-function branch(x, y, len, angle, alpha, color, letter) {
+function branch(x, y, len, angle, alpha, color) {
     push();
     translate(x, y);
     rotate(angle);
@@ -23,23 +23,25 @@ function branch(x, y, len, angle, alpha, color, letter) {
     if (len > 10) {  // Increase branching and make faster
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color, letter); // Spread out more
-        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color, letter); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color); // Spread out more
     } 
 
     pop();
 }
 
-function updateFractalVisual(message) {
+function updateFractalVisual(letter, echoDepth = 3) {
     background(0); // Clear the canvas
     branches = []; // Reset branches array
     letters = []; // Reset letters array
     let x = width / 2; // Center x position
     let y = height / 2; // Center y position
-    for (let char of message.toLowerCase()) {
-        let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
-        branches.push({ x: x, y: y, len: len, angle: -PI / 2, alpha: 255, color: color, letter: char });
-        letters.push({ x: x, y: y - len, letter: char }); // Store letter positions
+    let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
+    for (let i = 0; i < echoDepth; i++) {
+        let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
+        let scale = Math.pow(0.9, i); // Reduce size for each echo
+        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color });
+        letters.push({ x: x, y: y, letter: letter, alpha: alpha }); // Store letter positions and alpha for echo effect
     }
     redraw(); // Trigger a redraw
 }
@@ -49,13 +51,13 @@ function draw() {
 
     // Draw branches
     for (let b of branches) {
-        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color, b.letter);
+        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color);
     }
 
     // Draw letters on top
     for (let l of letters) {
         noStroke();
-        fill(255);
+        fill(255, l.alpha); // Apply alpha for echo effect
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, l.x, l.y); // Draw letters on top
@@ -63,7 +65,7 @@ function draw() {
 
     // Remove branches and letters that have fully dissipated
     branches = branches.filter(b => b.alpha > 0);
-    letters = letters.filter(l => branches.some(b => b.letter === l.letter));
+    letters = letters.filter(l => l.alpha > 0);
 }
 
 // WebSocket connection to the server
