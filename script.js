@@ -6,10 +6,10 @@ let letters = [];
 function setup() {
     let canvas = createCanvas(800, 600);
     canvas.parent('canvasContainer');
-    angle = PI / 6; // Spread out the branches more
+    angle = PI / 6; // Adjust the angle for a circular shape
     background(0);
     stroke(255);
-    frameRate(60); // Increase the frame rate for smoother animations
+    frameRate(60); // Smooth animations
 }
 
 function branch(x, y, len, angle, alpha, letter) {
@@ -20,9 +20,11 @@ function branch(x, y, len, angle, alpha, letter) {
     line(0, 0, 0, -len);
 
     if (len > 10) {  // Control branch density
-        branch(0, -len, len * 0.67, angle + PI / 6, alpha * 0.5, letter); // Increase dissipation speed
-        branch(0, -len, len * 0.67, angle - PI / 6, alpha * 0.5, letter); // Increase dissipation speed
-    } else if (len <= 20) {  // Add letters at the end of branches
+        let nextX = 0;
+        let nextY = -len;
+        branch(nextX, nextY, len * 0.67, angle + PI / 6, alpha * 0.67, letter); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle - PI / 6, alpha * 0.67, letter); // Spread out more
+    } else {  // Add letters at the end of branches
         noStroke();
         fill(255);
         textSize(32);
@@ -61,7 +63,7 @@ function draw() {
         fill(255);
         textSize(32);
         textAlign(CENTER, CENTER);
-        text(l.letter, l.x, l.y - len); // Draw letters on top
+        text(l.letter, l.x, l.y); // Draw letters on top
     }
 
     // Remove branches and letters that have fully dissipated
