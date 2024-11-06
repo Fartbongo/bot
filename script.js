@@ -5,12 +5,12 @@ let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
 const fadeSpeed = 1; // Adjust the speed at which fractals fade out
 const maxLetters = 10; // Increase the number of letters
-const bounceSpeed = 0.01; // Speed of letter bouncing
+const bounceSpeed = 0.005; // Slow down letter bouncing
 
 function setup() {
     let canvas = createCanvas(1000, 800); // Slightly larger canvas size
     canvas.parent('canvasContainer');
-    angle = PI / 4; // Ensure the tree branches are upright
+    angle = -PI / 4; // Ensure the tree branches are 45 degrees to the right
     background(0);
     frameRate(60); // Smooth animations
 }
