@@ -5,10 +5,10 @@ let branches = [];
 function setup() {
     let canvas = createCanvas(800, 600);
     canvas.parent('canvasContainer');
-    angle = PI / 6; // Adjust the angle to spread out the branches more
+    angle = PI / 6; // Spread out the branches more
     background(0);
     stroke(255);
-    frameRate(30); // Set a reasonable frame rate
+    noLoop(); // Prevent automatic looping
 }
 
 function branch(x, y, len, angle, alpha, letter) {
@@ -17,30 +17,27 @@ function branch(x, y, len, angle, alpha, letter) {
     rotate(angle);
     stroke(255, alpha);
     line(0, 0, 0, -len);
-    if (len > 10) {  // Adjust the length threshold to control branch density
+
+    if (len > 10) {  // Control branch density
         branch(0, -len, len * 0.67, angle + PI / 6, alpha * 0.67, letter);
         branch(0, -len, len * 0.67, angle - PI / 6, alpha * 0.67, letter);
-    } else if (len <= 20) {  // Add letters at the end of branches
-        push();
-        translate(0, -len);
+    } else {  // Add letters at the end of branches
         noStroke();
         fill(255);
-        textSize(32); // Adjusted text size for clarity
-        textAlign(CENTER, CENTER); // Center align the text
-        text(letter, 0, 0);
-        pop();
+        textSize(32);
+        textAlign(CENTER, CENTER);
+        text(letter, 0, -len); // Place letters centrally
     }
+
     pop();
 }
 
-function updateFractalVisual(message) {
+function drawLettersWithFractals(message) {
     background(0); // Clear the canvas
     len = 100; // Reset the initial length
-    let x = width / 2; // Center the initial x position
-    let y = height / 2; // Center the initial y position
-    for (let char of message.toLowerCase()) {
-        branch(x, y, len, -PI / 2, 255, char); // Draw a new branch for each letter
-    }
+    let x = width / 2; // Center x position
+    let y = height / 2; // Center y position
+    branch(x, y, len, -PI / 2, 255, message); // Draw a new branch for the entire message
 }
 
 const display = document.getElementById('display');
@@ -68,7 +65,7 @@ socket.onmessage = (event) => {
     const letter = event.data;
     console.log(`Received: ${letter}`);
     showLetter(letter);
-    updateFractalVisual(letter); // Trigger the fractal update based on the letter
+    drawLettersWithFractals(letter); // Trigger the fractal update with the entire message
 };
 
 socket.onclose = () => {
@@ -80,5 +77,5 @@ socket.onerror = (error) => {
 };
 
 function draw() {
-    drawBranches(); // Continuously draw branches
+    // We're not using a continuous draw loop as each update is triggered by WebSocket messages
 }
