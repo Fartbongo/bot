@@ -1,4 +1,3 @@
-// p5.js code for fractal visuals
 let angle;
 let len = 100;
 let branches = [];
@@ -15,13 +14,11 @@ function setup() {
 function branch(len) {
     let newBranch = { x: width / 2, y: height, len: len, angle: -PI / 2, alpha: 255 };
     branches.push(newBranch);
-    drawBranches();
 }
 
 function drawBranches() {
     background(0);
-    for (let i = branches.length - 1; i >= 0; i--) {
-        let b = branches[i];
+    for (let b of branches) {
         push();
         translate(b.x, b.y);
         rotate(b.angle);
@@ -30,27 +27,21 @@ function drawBranches() {
         pop();
 
         b.alpha -= 5; // Fade out the branch
-        if (b.alpha > 0) {
-            let newBranch1 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle + angle, alpha: b.alpha };
-            let newBranch2 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle - angle, alpha: b.alpha };
-            branches.push(newBranch1);
-            branches.push(newBranch2);
-        } else {
-            branches.splice(i, 1); // Remove the branch when it disappears
+        b.len *= 0.67; // Reduce the length
+        if (b.alpha <= 0) {
+            branches.splice(branches.indexOf(b), 1); // Remove the branch when it disappears
         }
     }
 }
 
 function updateFractalVisual(message) {
     len = 100; // Reset the initial length
-    branches = []; // Reset the branches array
     for (let char of message.toLowerCase()) {
         branch(len); // Create a new branch for each letter in the message
     }
     redraw(); // Trigger a redraw
 }
 
-// WebSocket connection to the server
 const display = document.getElementById('display');
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
 
