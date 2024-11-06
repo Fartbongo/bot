@@ -6,7 +6,7 @@ let letters = [];
 function setup() {
     let canvas = createCanvas(800, 600);
     canvas.parent('canvasContainer');
-    angle = PI / 6; // Adjust the angle for a circular shape
+    angle = PI / 6; // Adjust the angle for tree branches
     background(0);
     stroke(255);
     frameRate(60); // Smooth animations
@@ -22,8 +22,8 @@ function branch(x, y, len, angle, alpha, letter) {
     if (len > 10) {  // Control branch density
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + PI / 6, alpha * 0.67, letter); // Spread out more
-        branch(nextX, nextY, len * 0.67, angle - PI / 6, alpha * 0.67, letter); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle + PI / 6, alpha * 0.67, letter); // Adjust angle for tree shape
+        branch(nextX, nextY, len * 0.67, angle - PI / 6, alpha * 0.67, letter); // Adjust angle for tree shape
     } else {  // Add letters at the end of branches
         noStroke();
         fill(255);
@@ -41,10 +41,10 @@ function updateFractalVisual(message) {
     branches = []; // Reset branches array
     letters = []; // Reset letters array
     let x = width / 2; // Center x position
-    let y = height / 2; // Center y position
+    let y = height; // Start at the bottom of the canvas
     for (let char of message.toLowerCase()) {
         branches.push({ x: x, y: y, len: len, angle: -PI / 2, alpha: 255, letter: char });
-        letters.push({ x: x, y: y, letter: char }); // Store letter positions
+        letters.push({ x: x, y: y - len, letter: char }); // Store letter positions
     }
     redraw(); // Trigger a redraw
 }
