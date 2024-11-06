@@ -4,13 +4,13 @@ let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
 const fadeSpeed = 1; // Adjust the speed at which fractals fade out
-const maxLetters = 5; // Limit the number of letters
+const maxLetters = 10; // Increase the number of letters
 const bounceSpeed = 0.01; // Speed of letter bouncing
 
 function setup() {
     let canvas = createCanvas(1200, 900); // Moderately increase canvas size
     canvas.parent('canvasContainer');
-    angle = -PI / 4; // Adjust the angle for 45 degrees left
+    angle = PI / 6; // Adjust the angle for the tree branches
     background(0);
     frameRate(60); // Smooth animations
 }
@@ -28,7 +28,7 @@ function branch(x, y, len, angle, alpha, color, depth = 0, letter) {
         let nextY = -len;
         branch(nextX, nextY, len * 0.67, angle + random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
         branch(nextX, nextY, len * 0.67, angle - random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
-    } else if (depth < maxLetters) {  // Add letters at the end of branches
+    } else {  // Add letters at the end of branches
         drawFlower(0, -len, alpha, letter); // Draw flower shapes using letters
     }
 
@@ -56,13 +56,13 @@ function updateFractalVisual(letter, echoDepth = 3) {
     branches = []; // Reset branches array
     letters = []; // Reset letters array
     let x = width / 2; // Center x position
-    let y = height / 2; // Center y position
+    let y = height; // Start from the bottom of the canvas
     let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
         branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color, letter: letter });
-        if (i < maxLetters) {  // Limit the number of letters
+        if (i < maxLetters) {  // Increase the number of letters
             letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: -PI / 2, bounceOffset: 0 });
         }
     }
