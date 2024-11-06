@@ -1,11 +1,10 @@
 let angle;
-let len = 150; // Controlled initial length
+let len = 200; // Controlled initial length
 let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
 const fadeSpeed = 2; // Adjust the speed at which fractals fade out
-const maxLetters = 5; // Limit the number of letters
-const letterDelay = 60; // Delay between letters
+const maxLetters = 3; // Limit the number of letters
 
 function setup() {
     let canvas = createCanvas(1200, 900); // Moderately increase canvas size
@@ -15,7 +14,7 @@ function setup() {
     frameRate(60); // Smooth animations
 }
 
-function branch(x, y, len, angle, alpha, color, letter, depth = 0) {
+function branch(x, y, len, angle, alpha, color, depth = 0) {
     push();
     translate(x, y);
     rotate(angle);
@@ -23,18 +22,12 @@ function branch(x, y, len, angle, alpha, color, letter, depth = 0) {
     strokeWeight(alpha / 255 * 4); // Vary stroke weight with alpha for bold lines
     line(0, 0, 0, -len);
 
-    if (depth < maxLetters && len > 20) {  // Control branch density and number of letters
+    if (len > 20) {  // Control branch density with larger threshold
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color, letter, depth + 1); // Spread out more
-        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color, letter, depth + 1); // Spread out more
-    } else if (depth < maxLetters) {  // Add letters at the end of branches
-        noStroke();
-        fill(255);
-        textSize(48); // Increase text size for more impact
-        textAlign(CENTER, CENTER);
-        text(letter, 0, -len); // Place letters centrally
-    }
+        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color, depth + 1); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color, depth + 1); // Spread out more
+    } 
 
     pop();
 }
@@ -49,8 +42,10 @@ function updateFractalVisual(letter, echoDepth = 3) {
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
-        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color, letter: letter });
-        letters.push({ x: x, y: y - len * scale, letter: letter, alpha: alpha, scale: scale, delay: i * letterDelay }); // Store letter positions, alpha, and delay for echo effect
+        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color });
+        if (i < maxLetters) {  // Limit the number of letters
+            letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: -PI / 2 });
+        }
     }
     redraw(); // Trigger a redraw
 }
@@ -60,23 +55,24 @@ function draw() {
 
     // Draw branches
     for (let b of branches) {
-        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color, b.letter);
+        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color);
         b.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
     }
 
-    // Draw letters on top and moving through branches
+    // Draw letters bouncing down the fractal branches
     for (let l of letters) {
-        if (frameCount > l.delay) { // Delay the appearance of letters
-            push();
-            translate(l.x, l.y);
-            scale(l.scale); // Apply scaling for pulsating effect
-            fill(255, l.alpha); // Apply alpha for echo effect
-            textSize(48); // Increase text size for more impact
-            textAlign(CENTER, CENTER);
-            text(l.letter, 0, 0); // Draw letters on top
-            l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
-            pop();
-        }
+        push();
+        translate(l.x, l.y);
+        rotate(l.angle);
+        scale(l.scale); // Apply scaling for pulsating effect
+        fill(255, l.alpha); // Apply alpha for echo effect
+        textSize(48); // Increase text size for more impact
+        textAlign(CENTER, CENTER);
+        text(l.letter, 0, 0); // Draw letters on top
+        l.y -= l.len * 0.1; // Move letters down the branches
+        l.scale *= 0.9; // Reduce size of letters
+        l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
+        pop();
     }
 
     // Remove branches and letters that have fully dissipated
