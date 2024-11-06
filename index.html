@@ -15,6 +15,7 @@
             align-items: center;
             height: 100vh; /* Full viewport height */
             overflow: hidden; /* Prevent scrolling */
+            flex-direction: column;
         }
         .letter {
             font-size: 4em;  /* Increase the size of the letters */
@@ -42,10 +43,10 @@
         }
         #canvasContainer {
             width: 100%;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-grow: 1; /* Ensure the canvas takes available space */
         }
     </style>
 </head>
