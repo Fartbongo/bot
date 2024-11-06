@@ -1,11 +1,11 @@
 let angle;
-let len = 300; // Greatly increase initial length for huge fractals
+let len = 200; // Increase initial length but in a controlled manner
 let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
 
 function setup() {
-    let canvas = createCanvas(1600, 1200); // Increase canvas size
+    let canvas = createCanvas(1200, 900); // Moderately increase canvas size
     canvas.parent('canvasContainer');
     angle = PI / 4; // Adjust the angle for more spread
     background(0);
@@ -17,7 +17,7 @@ function branch(x, y, len, angle, alpha, color, letter) {
     translate(x, y);
     rotate(angle);
     stroke(color);
-    strokeWeight(alpha / 255 * 5); // Vary stroke weight with alpha for bold lines
+    strokeWeight(alpha / 255 * 4); // Vary stroke weight with alpha for bold lines
     line(0, 0, 0, -len);
 
     if (len > 20) {  // Control branch density with larger threshold
@@ -28,7 +28,7 @@ function branch(x, y, len, angle, alpha, color, letter) {
     } else {  // Add letters at the end of branches
         noStroke();
         fill(255);
-        textSize(64); // Increase text size for more impact
+        textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(letter, 0, -len); // Place letters centrally
     }
@@ -62,7 +62,7 @@ function draw() {
     for (let l of letters) {
         noStroke();
         fill(255);
-        textSize(64); // Increase text size for more impact
+        textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, l.x, l.y); // Draw letters on top
     }
