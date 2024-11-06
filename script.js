@@ -95,18 +95,18 @@ function draw() {
         b.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
     }
 
-    // Draw letters bouncing down the fractal branches
+    // Draw letters bouncing towards the viewer
     for (let l of letters) {
         push();
-        translate(l.x, l.y + l.bounceOffset);
+        translate(l.x, l.y);
         rotate(l.angle);
         scale(l.scale); // Apply scaling for pulsating effect
         fill(255, l.alpha + 100); // Increased opacity
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, 0, 0); // Draw letters on top
-        l.bounceOffset += l.len * bounceSpeed; // Adjust bounce effect to move down
-        l.scale *= 0.95; // Reduce size of letters
+        l.bounceOffset += l.len * bounceSpeed; // Adjust bounce effect to move towards the viewer
+        l.scale *= 1.05; // Increase size of letters as they move
         l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
         pop();
     }
@@ -118,9 +118,9 @@ function draw() {
         textSize(o.size);
         textAlign(CENTER, CENTER);
         text(o.letter, o.x, o.y);
-        o.y += o.size * bounceSpeed * 5; // Make the letters bounce down
+        o.y -= o.size * bounceSpeed * 5; // Make the letters come towards the viewer
         o.alpha -= fadeSpeed;
-        o.size *= 0.95;
+        o.size *= 1.05; // Increase size of letters as they move
         if (o.alpha <= 0) oldLetters.splice(i, 1); // Remove letters that have fully faded
     }
 
