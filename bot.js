@@ -1,24 +1,19 @@
+// Existing JavaScript code
 const WebSocket = require('ws');
 const tmi = require('tmi.js');
 const path = require('path');
 const player = require('node-wav-player');
 
-// Set up WebSocket server
-const wss = new WebSocket.Server({ port: 8080 });
+// Function to generate a simple fractal pattern
+function generateFractalPattern(depth) {
+    if (depth === 0) return 'a'; // Base case
+    const pattern = generateFractalPattern(depth - 1);
+    return pattern + pattern + pattern; // Fractal pattern
+}
 
-// Define configuration options
-const opts = {
-    identity: {
-        username: 'chatmusicbot',
-        password: 'oauth:kogmfeatoxcqelhxdoszgev698fb9g'
-    },
-    channels: [
-        '#fartbongo'
-    ]
-};
-
-// Create a client with our options
-const client = new tmi.Client(opts);
+// Generate a fractal pattern with a specific depth
+const fractalPattern = generateFractalPattern(3);
+console.log(fractalPattern); // Example output: "aaaaaaaaa"
 
 // Define a mapping for characters to notes
 const charToNote = {
@@ -60,8 +55,8 @@ function playNextInQueue() {
     });
 }
 
-function playNoteFromMessage(message) {
-    for (let char of message.toLowerCase()) {
+function playFractalPattern(pattern) {
+    for (let char of pattern) {
         if (char in charToNote) {
             let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile} for letter: ${char}`);
@@ -76,26 +71,36 @@ function playNoteFromMessage(message) {
     }
 }
 
-// Function to broadcast letters to WebSocket clients
-function broadcastLetter(letter) {
-    wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(letter);
-        }
-    });
+// WebSocket connection to the server
+const socket = new WebSocket('ws://localhost:8080');
+
+socket.onopen = () => {
+    console.log('WebSocket connection established.');
+};
+
+socket.onmessage = (event) => {
+    const letter = event.data;
+    console.log(`Received: ${letter}`);
+    showLetter(letter);
+    // Optionally call a function to update the fractal visual
+    updateFractalVisual();
+};
+
+socket.onclose = () => {
+    console.log('WebSocket connection closed.');
+};
+
+socket.onerror = (error) => {
+    console.error(`WebSocket error: ${error}`);
+};
+
+// Function to update the fractal visual (if needed)
+function updateFractalVisual() {
+    // Redraw the fractal with new parameters or update the existing fractal
+    background(0);
+    translate(width / 2, height);
+    branch(len);
 }
 
-// Register event handlers
-client.on('message', (channel, tags, message, self) => {
-    if (self) return;
-    console.log(`${tags['display-name']}: ${message}`);
-    playNoteFromMessage(message);
-});
-
-client.connect()
-    .then(() => {
-        console.log('Connected to Twitch chat');
-    })
-    .catch(err => {
-        console.error('Error connecting to Twitch:', err);
-    });
+// Play the fractal pattern when needed
+playFractalPattern(fractalPattern);
