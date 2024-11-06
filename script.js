@@ -8,7 +8,7 @@ const maxLetters = 5; // Limit the number of letters
 const bounceSpeed = 0.01; // Speed of letter bouncing
 
 function setup() {
-    let canvas = createCanvas(1200, 900); // Moderately increase canvas size
+    let canvas = createCanvas(900, 1200); // Adjust canvas size for rotation
     canvas.parent('canvasContainer');
     angle = PI / 4; // Adjust the angle for more spread
     background(0);
@@ -21,15 +21,15 @@ function branch(x, y, len, angle, alpha, color, depth = 0, letter) {
     rotate(angle);
     stroke(color);
     strokeWeight(alpha / 255 * 4); // Vary stroke weight with alpha for bold lines
-    line(0, 0, 0, -len);
+    line(0, 0, len, 0); // Rotate line to be horizontal
 
     if (len > 20) {  // Control branch density with larger threshold
-        let nextX = 0;
-        let nextY = -len;
+        let nextX = len;
+        let nextY = 0;
         branch(nextX, nextY, len * 0.67, angle + random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
         branch(nextX, nextY, len * 0.67, angle - random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
     } else if (depth < maxLetters) {  // Add letters at the end of branches
-        drawFlower(0, -len, alpha, letter); // Draw flower shapes using letters
+        drawFlower(len, 0, alpha, letter); // Draw flower shapes using letters
     }
 
     pop();
@@ -55,15 +55,15 @@ function updateFractalVisual(letter, echoDepth = 3) {
     background(0); // Clear the canvas
     branches = []; // Reset branches array
     letters = []; // Reset letters array
-    let x = width / 2; // Center x position
-    let y = height / 2; // Center y position
+    let x = height / 2; // Adjust center x position for rotation
+    let y = width / 2; // Adjust center y position for rotation
     let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
-        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color, letter: letter });
+        branches.push({ x: x, y: y, len: len * scale, angle: 0, alpha: alpha, color: color, letter: letter });
         if (i < maxLetters) {  // Limit the number of letters
-            letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: -PI / 2, bounceOffset: 0 });
+            letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: 0, bounceOffset: 0 });
         }
     }
     redraw(); // Trigger a redraw
@@ -78,17 +78,17 @@ function draw() {
         b.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
     }
 
-    // Draw letters bouncing down the fractal branches
+    // Draw letters bouncing along the fractal branches
     for (let l of letters) {
         push();
-        translate(l.x, l.y + l.bounceOffset);
+        translate(l.x + l.bounceOffset, l.y); // Adjust translation for horizontal movement
         rotate(l.angle);
         scale(l.scale); // Apply scaling for pulsating effect
         fill(255, l.alpha); // Apply alpha for echo effect
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, 0, 0); // Draw letters on top
-        l.bounceOffset += l.len * bounceSpeed; // Adjust bounce effect to move down
+        l.bounceOffset += l.len * bounceSpeed; // Adjust bounce effect to move horizontally
         l.scale *= 0.95; // Reduce size of letters
         l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
         pop();
