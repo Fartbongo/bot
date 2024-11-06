@@ -8,9 +8,9 @@ const maxLetters = 10; // Increase the number of letters
 const bounceSpeed = 0.01; // Speed of letter bouncing
 
 function setup() {
-    let canvas = createCanvas(800, 600); // Smaller canvas size
+    let canvas = createCanvas(1000, 800); // Slightly larger canvas size
     canvas.parent('canvasContainer');
-    angle = PI / 6; // Adjust the angle for the tree branches
+    angle = PI / 4; // Ensure the tree branches are upright
     background(0);
     frameRate(60); // Smooth animations
 }
@@ -95,7 +95,7 @@ function draw() {
     }
 
     // Remove branches and letters that have fully dissipated
-    branches are branches.filter(b => b.alpha > 0);
+    branches = branches.filter(b => b.alpha > 0);
     letters = letters.filter(l => l.alpha > 0);
 }
 
