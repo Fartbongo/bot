@@ -60,6 +60,7 @@ const charToNote = {
 const queue = [];
 const letterQueue = [];
 let isPlaying = false;
+let volume = 1; // Volume control for the echo effect
 
 function playNextInQueue() {
     if (queue.length === 0) {
@@ -75,8 +76,9 @@ function playNextInQueue() {
     console.log(`Playing: ${noteFile} for letter: ${letter}`);
     broadcastLetter(letter);
 
-    player.play({ path: noteFile }).then(() => {
+    player.play({ path: noteFile, gain: volume }).then(() => {
         console.log(`Finished playing: ${noteFile}`);
+        volume *= 0.8; // Reduce volume for the echo effect
         setTimeout(playNextInQueue, 300);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error.message}`);
@@ -95,6 +97,7 @@ function playFractalPattern(pattern) {
             console.warn(`Character ${char} not mapped to any sound.`);
         }
     }
+    volume = 1; // Reset volume for each new pattern
     if (!isPlaying) {
         playNextInQueue();
     }
