@@ -1,5 +1,5 @@
 let angle;
-let len = 200; // Controlled initial length
+let len = 150; // Controlled initial length
 let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
