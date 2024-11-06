@@ -82,53 +82,14 @@ function playFractalPattern(pattern) {
     }
 }
 
-// Function to display letters on the front-end
-function showLetter(letter) {
-    const display = document.getElementById('display');
-
-    const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
-
-    const span = document.createElement('span');
-    span.className = 'letter';
-    span.textContent = letter;
-    span.style.color = colors[Math.floor(Math.random() * colors.length)];
-    display.appendChild(span);
-
-    setTimeout(() => {
-        span.remove();
-    }, 3000); // Remove the letter after 3 seconds
-}
-
 // WebSocket connection to the server
-const socket = new WebSocket('ws://localhost:8080');
+wss.on('connection', (ws) => {
+    console.log('New client connected.');
 
-socket.onopen = () => {
-    console.log('WebSocket connection established.');
-};
-
-socket.onmessage = (event) => {
-    const letter = event.data;
-    console.log(`Received: ${letter}`);
-    showLetter(letter);
-    // Optionally call a function to update the fractal visual
-    updateFractalVisual();
-};
-
-socket.onclose = () => {
-    console.log('WebSocket connection closed.');
-};
-
-socket.onerror = (error) => {
-    console.error(`WebSocket error: ${error}`);
-};
-
-// Function to update the fractal visual (if needed)
-function updateFractalVisual() {
-    // Redraw the fractal with new parameters or update the existing fractal
-    background(0);
-    translate(width / 2, height);
-    branch(len);
-}
+    ws.on('close', () => {
+        console.log('Client disconnected.');
+    });
+});
 
 // Play the fractal pattern when needed
 playFractalPattern(fractalPattern);

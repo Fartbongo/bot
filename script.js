@@ -27,7 +27,6 @@ function branch(len) {
     }
 }
 
-// Existing JavaScript code
 const display = document.getElementById('display');
 
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
