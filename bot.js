@@ -51,10 +51,22 @@ const charToNote = {
 };
 
 const queue = [];
-const letterQueue = [];
 let isPlaying = false;
 const echoDelay = 300; // Echo delay in milliseconds
 let volume = 1; // Volume control for the echo effect
+
+function playSound(noteFile, volume, depth) {
+    player.play({ path: noteFile, gain: volume }).then(() => {
+        console.log(`Finished playing: ${noteFile} with volume: ${volume}`);
+        if (depth > 0) {
+            setTimeout(() => {
+                playSound(noteFile, volume * 0.8, depth - 1); // Recursive call for echo effect
+            }, echoDelay);
+        }
+    }).catch((error) => {
+        console.error(`Error playing note ${noteFile}: ${error.message}`);
+    });
+}
 
 function playNextInQueue() {
     if (queue.length === 0) {
@@ -64,29 +76,23 @@ function playNextInQueue() {
     }
 
     isPlaying = true;
-    const noteFile = queue.shift();
-    const letter = letterQueue.shift();
+    const { noteFile, letter, depth } = queue.shift();
 
     console.log(`Playing: ${noteFile} for letter: ${letter}`);
     broadcastLetter(letter);
 
-    player.play({ path: noteFile, gain: volume }).then(() => {
-        console.log(`Finished playing: ${noteFile}`);
-        volume *= 0.8; // Reduce volume for the echo effect
-        setTimeout(playNextInQueue, echoDelay);
-    }).catch((error) => {
-        console.error(`Error playing note ${noteFile}: ${error.message}`);
-        setTimeout(playNextInQueue, echoDelay);
-    });
+    playSound(noteFile, volume, depth);
+
+    setTimeout(playNextInQueue, echoDelay);
 }
 
 function playFractalPattern(message) {
+    const depth = 3; // Set depth for the fractal sound effect
     for (let char of message.toLowerCase()) {
         if (char in charToNote) {
             let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile} for letter: ${char}`);
-            queue.push(noteFile);
-            letterQueue.push(char);
+            queue.push({ noteFile, letter: char, depth });
         } else {
             console.warn(`Character ${char} not mapped to any sound.`);
         }

@@ -1,6 +1,7 @@
 let angle;
 let len = 100;
 let branches = [];
+let letters = [];
 
 function setup() {
     let canvas = createCanvas(800, 600);
@@ -8,43 +9,38 @@ function setup() {
     angle = PI / 4;
     background(0);
     stroke(255);
-    noLoop(); // Prevent automatic looping
 }
 
-function branch(x, y, len, angle, alpha) {
+function branch(x, y, len, angle, alpha, letter) {
     push();
     translate(x, y);
     rotate(angle);
     stroke(255, alpha);
     line(0, 0, 0, -len);
     if (len > 4) {
-        branch(0, -len, len * 0.67, angle + PI / 4, alpha * 0.67);
-        branch(0, -len, len * 0.67, angle - PI / 4, alpha * 0.67);
+        branch(0, -len, len * 0.67, angle + PI / 4, alpha * 0.67, letter);
+        branch(0, -len, len * 0.67, angle - PI / 4, alpha * 0.67, letter);
+    }
+    if (len <= 20) {  // Add letters at the end of branches
+        push();
+        translate(0, -len);
+        noStroke();
+        fill(255);
+        textSize(24);
+        text(letter, 0, 0);
+        pop();
     }
     pop();
-}
-
-function drawLetterWithFractal(letter, x, y) {
-    push();
-    translate(x, y);
-    noStroke();
-    fill(255);
-    textSize(64);
-    text(letter, 0, 0);
-    pop();
-
-    // Draw the fractal effect around the letter
-    branch(x + 20, y, len, -PI / 2, 255);
 }
 
 function updateFractalVisual(message) {
     background(0); // Clear the canvas
     len = 100; // Reset the initial length
-    let x = 50;
-    let y = height / 2;
-    for (let char of message.toLowerCase()) {
-        drawLetterWithFractal(char, x, y);
-        x += 70; // Move to the next position for the next letter
+    for (let i = 0; i < message.length; i++) {
+        let char = message.charAt(i).toLowerCase();
+        let x = (i + 1) * (width / (message.length + 1));
+        let y = height / 2;
+        branch(x, y, len, -PI / 2, 255, char); // Draw a new branch for each letter
     }
 }
 
@@ -83,3 +79,7 @@ socket.onclose = () => {
 socket.onerror = (error) => {
     console.error(`WebSocket error: ${error}`);
 };
+
+function draw() {
+    // We're not using a continuous draw loop here as each update is triggered by WebSocket messages
+}
