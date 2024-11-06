@@ -9,18 +9,17 @@ function setup() {
     angle = PI / 4;
     background(0);
     stroke(255);
-    translate(width / 2, height);
+    noLoop(); // Prevent automatic looping
 }
 
-function branch(len, letter) {
-    let newBranch = { x: 0, y: -len, len: len, angle: 0, alpha: 255, letter: letter };
+function branch(len) {
+    let newBranch = { x: width / 2, y: height, len: len, angle: -PI / 2, alpha: 255 };
     branches.push(newBranch);
     drawBranches();
 }
 
 function drawBranches() {
     background(0);
-    translate(width / 2, height);
     for (let i = branches.length - 1; i >= 0; i--) {
         let b = branches[i];
         push();
@@ -28,13 +27,12 @@ function drawBranches() {
         rotate(b.angle);
         stroke(255, b.alpha);
         line(0, 0, 0, -b.len);
-        translate(0, -b.len);
         pop();
 
         b.alpha -= 5; // Fade out the branch
         if (b.alpha > 0) {
-            let newBranch1 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle + angle, alpha: b.alpha, letter: b.letter };
-            let newBranch2 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle - angle, alpha: b.alpha, letter: b.letter };
+            let newBranch1 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle + angle, alpha: b.alpha };
+            let newBranch2 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle - angle, alpha: b.alpha };
             branches.push(newBranch1);
             branches.push(newBranch2);
         } else {
@@ -47,8 +45,9 @@ function updateFractalVisual(message) {
     len = 100; // Reset the initial length
     branches = []; // Reset the branches array
     for (let char of message.toLowerCase()) {
-        branch(len, char); // Create a new branch for each letter in the message
+        branch(len); // Create a new branch for each letter in the message
     }
+    redraw(); // Trigger a redraw
 }
 
 // WebSocket connection to the server
