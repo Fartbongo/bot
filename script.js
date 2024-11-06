@@ -3,7 +3,7 @@ let len = 150; // Controlled initial length
 let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
-const fadeSpeed = 2; // Adjust the speed at which fractals fade out
+const fadeSpeed = 1; // Adjust the speed at which fractals fade out
 const maxLetters = 5; // Limit the number of letters
 const bounceSpeed = 0.01; // Speed of letter bouncing
 
@@ -15,7 +15,7 @@ function setup() {
     frameRate(60); // Smooth animations
 }
 
-function branch(x, y, len, angle, alpha, color, depth = 0) {
+function branch(x, y, len, angle, alpha, color, depth = 0, letter) {
     push();
     translate(x, y);
     rotate(angle);
@@ -26,18 +26,18 @@ function branch(x, y, len, angle, alpha, color, depth = 0) {
     if (len > 20) {  // Control branch density with larger threshold
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1); // Spread out more dynamically
-        branch(nextX, nextY, len * 0.67, angle - random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1); // Spread out more dynamically
+        branch(nextX, nextY, len * 0.67, angle + random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
+        branch(nextX, nextY, len * 0.67, angle - random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
     } else if (depth < maxLetters) {  // Add letters at the end of branches
-        drawFlower(0, -len, alpha); // Draw flower shapes using letters
+        drawFlower(0, -len, alpha, letter); // Draw flower shapes using letters
     }
 
     pop();
 }
 
-function drawFlower(x, y, alpha) {
+function drawFlower(x, y, alpha, letter) {
     let petals = 'abcdefghijklmnopqrstuvwxyz'; // Letters for petals
-    let centerLetter = petals.charAt(Math.floor(Math.random() * petals.length)).toUpperCase(); // Center letter
+    let centerLetter = letter; // Center letter
     fill(255, 255, 0, alpha); // Center color
     noStroke();
     textSize(32);
@@ -61,7 +61,7 @@ function updateFractalVisual(letter, echoDepth = 3) {
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
-        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color });
+        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color, letter: letter });
         if (i < maxLetters) {  // Limit the number of letters
             letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: -PI / 2, bounceOffset: 0 });
         }
@@ -74,7 +74,7 @@ function draw() {
 
     // Draw branches
     for (let b of branches) {
-        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color);
+        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color, 0, b.letter);
         b.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
     }
 
