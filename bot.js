@@ -1,8 +1,19 @@
-// Existing JavaScript code
 const WebSocket = require('ws');
 const tmi = require('tmi.js');
 const path = require('path');
 const player = require('node-wav-player');
+
+// Set up WebSocket server
+const wss = new WebSocket.Server({ port: 8080 });
+
+// Function to broadcast letters to WebSocket clients
+function broadcastLetter(letter) {
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(letter);
+        }
+    });
+}
 
 // Function to generate a simple fractal pattern
 function generateFractalPattern(depth) {
