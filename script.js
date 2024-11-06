@@ -1,11 +1,11 @@
 let angle;
-let len = 200; // Controlled initial length
+let len = 150; // Controlled initial length
 let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
 const fadeSpeed = 2; // Adjust the speed at which fractals fade out
-const maxLetters = 3; // Limit the number of letters
-const bounceSpeed = 0.05; // Speed of letter bouncing
+const maxLetters = 5; // Limit the number of letters
+const bounceSpeed = 0.01; // Speed of letter bouncing
 
 function setup() {
     let canvas = createCanvas(1200, 900); // Moderately increase canvas size
@@ -26,10 +26,10 @@ function branch(x, y, len, angle, alpha, color, depth = 0) {
     if (len > 20) {  // Control branch density with larger threshold
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color, depth + 1); // Spread out more
-        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color, depth + 1); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle + random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1); // Spread out more dynamically
+        branch(nextX, nextY, len * 0.67, angle - random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1); // Spread out more dynamically
     } else if (depth < maxLetters) {  // Add letters at the end of branches
-        drawFlower(x, y, alpha); // Draw flower shapes using letters
+        drawFlower(0, -len, alpha); // Draw flower shapes using letters
     }
 
     pop();
@@ -88,7 +88,7 @@ function draw() {
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, 0, 0); // Draw letters on top
-        l.bounceOffset += l.len * bounceSpeed; // Adjust bounce effect
+        l.bounceOffset += l.len * bounceSpeed; // Adjust bounce effect to move down
         l.scale *= 0.95; // Reduce size of letters
         l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
         pop();
