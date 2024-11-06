@@ -3,6 +3,7 @@ let len = 150; // Controlled initial length
 let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
+const fadeSpeed = 5; // Adjust the speed at which fractals fade out
 
 function setup() {
     let canvas = createCanvas(1200, 900); // Moderately increase canvas size
@@ -52,6 +53,7 @@ function draw() {
     // Draw branches
     for (let b of branches) {
         branch(b.x, b.y, b.len, b.angle, b.alpha, b.color);
+        b.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
     }
 
     // Draw letters on top and moving through branches
@@ -63,6 +65,7 @@ function draw() {
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, 0, 0); // Draw letters on top
+        l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
         pop();
     }
 
