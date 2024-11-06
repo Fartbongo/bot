@@ -8,7 +8,7 @@ const maxLetters = 10; // Increase the number of letters
 const bounceSpeed = 0.01; // Speed of letter bouncing
 
 function setup() {
-    let canvas = createCanvas(1200, 900); // Moderately increase canvas size
+    let canvas = createCanvas(800, 600); // Smaller canvas size
     canvas.parent('canvasContainer');
     angle = PI / 6; // Adjust the angle for the tree branches
     background(0);
@@ -26,8 +26,8 @@ function branch(x, y, len, angle, alpha, color, depth = 0, letter) {
     if (len > 20) {  // Control branch density with larger threshold
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
-        branch(nextX, nextY, len * 0.67, angle - random(PI / 6, PI / 3), alpha * 0.67, color, depth + 1, letter); // Spread out more dynamically
+        branch(nextX, nextY, len * 0.67, angle + PI / 6, alpha * 0.67, color, depth + 1, letter); // Slow down branch movements
+        branch(nextX, nextY, len * 0.67, angle - PI / 6, alpha * 0.67, color, depth + 1, letter); // Slow down branch movements
     } else {  // Add letters at the end of branches
         drawFlower(0, -len, alpha, letter); // Draw flower shapes using letters
     }
@@ -40,7 +40,7 @@ function drawFlower(x, y, alpha, letter) {
     let centerLetter = letter; // Center letter
     fill(255, 255, 0, alpha); // Center color
     noStroke();
-    textSize(32);
+    textSize(48); // Larger letters
     textAlign(CENTER, CENTER);
     text(centerLetter, x, y); // Draw center letter
 
@@ -56,7 +56,7 @@ function updateFractalVisual(letter, echoDepth = 3) {
     branches = []; // Reset branches array
     letters = []; // Reset letters array
     let x = width / 2; // Center x position
-    let y = height / 1.5; // Adjusted starting position to center the tree
+    let y = height; // Start from the bottom of the canvas
     let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
@@ -95,7 +95,7 @@ function draw() {
     }
 
     // Remove branches and letters that have fully dissipated
-    branches = branches.filter(b => b.alpha > 0);
+    branches are branches.filter(b => b.alpha > 0);
     letters = letters.filter(l => l.alpha > 0);
 }
 
