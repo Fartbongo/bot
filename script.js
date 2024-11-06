@@ -11,35 +11,41 @@ function setup() {
     noLoop(); // Prevent automatic looping
 }
 
-function branch(len) {
-    let newBranch = { x: width / 2, y: height, len: len, angle: -PI / 2, alpha: 255 };
-    branches.push(newBranch);
+function branch(x, y, len, angle, alpha) {
+    push();
+    translate(x, y);
+    rotate(angle);
+    stroke(255, alpha);
+    line(0, 0, 0, -len);
+    if (len > 4) {
+        branch(0, -len, len * 0.67, angle + PI / 4, alpha * 0.67);
+        branch(0, -len, len * 0.67, angle - PI / 4, alpha * 0.67);
+    }
+    pop();
 }
 
-function drawBranches() {
-    background(0);
-    for (let b of branches) {
-        push();
-        translate(b.x, b.y);
-        rotate(b.angle);
-        stroke(255, b.alpha);
-        line(0, 0, 0, -b.len);
-        pop();
+function drawLetterWithFractal(letter, x, y) {
+    push();
+    translate(x, y);
+    noStroke();
+    fill(255);
+    textSize(64);
+    text(letter, 0, 0);
+    pop();
 
-        b.alpha -= 5; // Fade out the branch
-        b.len *= 0.67; // Reduce the length
-        if (b.alpha <= 0) {
-            branches.splice(branches.indexOf(b), 1); // Remove the branch when it disappears
-        }
-    }
+    // Draw the fractal effect around the letter
+    branch(x + 20, y, len, -PI / 2, 255);
 }
 
 function updateFractalVisual(message) {
+    background(0); // Clear the canvas
     len = 100; // Reset the initial length
+    let x = 50;
+    let y = height / 2;
     for (let char of message.toLowerCase()) {
-        branch(len); // Create a new branch for each letter in the message
+        drawLetterWithFractal(char, x, y);
+        x += 70; // Move to the next position for the next letter
     }
-    redraw(); // Trigger a redraw
 }
 
 const display = document.getElementById('display');
@@ -77,7 +83,3 @@ socket.onclose = () => {
 socket.onerror = (error) => {
     console.error(`WebSocket error: ${error}`);
 };
-
-function draw() {
-    drawBranches();
-}

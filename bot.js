@@ -53,6 +53,7 @@ const charToNote = {
 const queue = [];
 const letterQueue = [];
 let isPlaying = false;
+const echoDelay = 300; // Echo delay in milliseconds
 let volume = 1; // Volume control for the echo effect
 
 function playNextInQueue() {
@@ -72,10 +73,10 @@ function playNextInQueue() {
     player.play({ path: noteFile, gain: volume }).then(() => {
         console.log(`Finished playing: ${noteFile}`);
         volume *= 0.8; // Reduce volume for the echo effect
-        setTimeout(playNextInQueue, 300);
+        setTimeout(playNextInQueue, echoDelay);
     }).catch((error) => {
         console.error(`Error playing note ${noteFile}: ${error.message}`);
-        setTimeout(playNextInQueue, 300);
+        setTimeout(playNextInQueue, echoDelay);
     });
 }
 
