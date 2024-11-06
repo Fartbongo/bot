@@ -5,7 +5,8 @@ let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
 const fadeSpeed = 1; // Adjust the speed at which fractals fade out
 const maxLetters = 10; // Increase the number of letters
-const bounceSpeed = 0.005; // Slow down letter bouncing
+const bounceSpeed = 0.01; // Speed of letter bouncing
+let bgOffset = 0;
 
 function setup() {
     let canvas = createCanvas(1000, 800); // Slightly larger canvas size
@@ -38,7 +39,7 @@ function branch(x, y, len, angle, alpha, color, depth = 0, letter) {
 function drawFlower(x, y, alpha, letter) {
     let petals = 'abcdefghijklmnopqrstuvwxyz'; // Letters for petals
     let centerLetter = letter; // Center letter
-    fill(255, 255, 0, alpha); // Center color
+    fill(255, 255, 0, alpha + 100); // Increased opacity
     noStroke();
     textSize(48); // Larger letters
     textAlign(CENTER, CENTER);
@@ -46,13 +47,25 @@ function drawFlower(x, y, alpha, letter) {
 
     for (let i = 0; i < 6; i++) {
         let petalLetter = petals.charAt(Math.floor(Math.random() * petals.length)).toUpperCase(); // Random petal letters
-        fill(255, 0, 0, alpha); // Petal color
+        fill(255, 0, 0, alpha + 100); // Increased opacity
         text(petalLetter, x + cos(i * PI / 3) * 20, y + sin(i * PI / 3) * 20);
     }
 }
 
+function drawGradient() {
+    let c1 = color('#ff9999');
+    let c2 = color('#3333ff');
+    for (let y = 0; y < height; y++) {
+        let n = map(y, 0, height, 0, 1);
+        let newc = lerpColor(c1, c2, n);
+        stroke(newc);
+        line(0, y, width, y);
+    }
+}
+
 function updateFractalVisual(letter, echoDepth = 3) {
-    background(0); // Clear the canvas
+    drawGradient(); // Draw background gradient
+    bgOffset += 0.05; // Move gradient for undulating effect
     branches = []; // Reset branches array
     letters = []; // Reset letters array
     let x = width / 2; // Center x position
@@ -61,16 +74,17 @@ function updateFractalVisual(letter, echoDepth = 3) {
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
-        branches.push({ x: x, y: y, len: len * scale, angle: angle, alpha: alpha, color: color, letter: letter });
+        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2 + angle, alpha: alpha, color: color, letter: letter });
         if (i < maxLetters) {  // Increase the number of letters
-            letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: angle, bounceOffset: 0 });
+            letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: -PI / 2, bounceOffset: 0 });
         }
     }
     redraw(); // Trigger a redraw
 }
 
 function draw() {
-    background(0); // Clear the canvas
+    drawGradient(); // Draw background gradient
+    bgOffset += 0.05; // Move gradient for undulating effect
 
     // Draw branches
     for (let b of branches) {
@@ -84,7 +98,7 @@ function draw() {
         translate(l.x, l.y + l.bounceOffset);
         rotate(l.angle);
         scale(l.scale); // Apply scaling for pulsating effect
-        fill(255, l.alpha); // Apply alpha for echo effect
+        fill(255, l.alpha + 100); // Increased opacity
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, 0, 0); // Draw letters on top
