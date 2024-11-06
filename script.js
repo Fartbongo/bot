@@ -20,18 +20,12 @@ function branch(x, y, len, angle, alpha, color, letter) {
     strokeWeight(alpha / 255 * 4); // Vary stroke weight with alpha for bold lines
     line(0, 0, 0, -len);
 
-    if (len > 20) {  // Control branch density with larger threshold
+    if (len > 10) {  // Increase branching and make faster
         let nextX = 0;
         let nextY = -len;
         branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color, letter); // Spread out more
         branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color, letter); // Spread out more
-    } else {  // Add letters at the end of branches
-        noStroke();
-        fill(255);
-        textSize(48); // Increase text size for more impact
-        textAlign(CENTER, CENTER);
-        text(letter, 0, -len); // Place letters centrally
-    }
+    } 
 
     pop();
 }
