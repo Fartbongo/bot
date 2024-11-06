@@ -6,6 +6,28 @@ const player = require('node-wav-player');
 // Set up WebSocket server
 const wss = new WebSocket.Server({ port: 8080 });
 
+// Define configuration options for Twitch chat
+const opts = {
+    identity: {
+        username: 'chatmusicbot',
+        password: 'oauth:kogmfeatoxcqelhxdoszgev698fb9g'
+    },
+    channels: [
+        '#fartbongo'
+    ]
+};
+
+// Create a Twitch chat client with our options
+const client = new tmi.Client(opts);
+
+client.connect()
+    .then(() => {
+        console.log('Connected to Twitch chat');
+    })
+    .catch(err => {
+        console.error('Error connecting to Twitch:', err);
+    });
+
 // Function to broadcast letters to WebSocket clients
 function broadcastLetter(letter) {
     wss.clients.forEach(client => {
@@ -21,10 +43,6 @@ function generateFractalPattern(depth) {
     const pattern = generateFractalPattern(depth - 1);
     return pattern + pattern + pattern; // Fractal pattern
 }
-
-// Generate a fractal pattern with a specific depth
-const fractalPattern = generateFractalPattern(3);
-console.log(fractalPattern); // Example output: "aaaaaaaaa"
 
 // Define a mapping for characters to notes
 const charToNote = {
@@ -91,5 +109,11 @@ wss.on('connection', (ws) => {
     });
 });
 
-// Play the fractal pattern when needed
-playFractalPattern(fractalPattern);
+// Listen to chat messages and trigger fractal generation
+client.on('message', (channel, tags, message, self) => {
+    if (self) return; // Ignore messages from the bot itself
+
+    console.log(`${tags['display-name']}: ${message}`);
+    const fractalPattern = generateFractalPattern(3); // Generate fractal pattern when a message is received
+    playFractalPattern(fractalPattern); // Play the generated fractal pattern
+});
