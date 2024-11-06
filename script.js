@@ -61,9 +61,9 @@ function updateFractalVisual(letter, echoDepth = 3) {
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
-        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color, letter: letter });
+        branches.push({ x: x, y: y, len: len * scale, angle: angle, alpha: alpha, color: color, letter: letter });
         if (i < maxLetters) {  // Increase the number of letters
-            letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: -PI / 2, bounceOffset: 0 });
+            letters.push({ x: x, y: y, len: len * scale, letter: letter, alpha: alpha, scale: scale, angle: angle, bounceOffset: 0 });
         }
     }
     redraw(); // Trigger a redraw
