@@ -2,8 +2,7 @@ let angle;
 let len = 150; // Controlled initial length
 let branches = [];
 let letters = [];
-const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
-const fadeSpeed = 5; // Adjust the speed at which fractals fade out
+const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
 
 function setup() {
     let canvas = createCanvas(1200, 900); // Moderately increase canvas size
@@ -13,7 +12,7 @@ function setup() {
     frameRate(60); // Smooth animations
 }
 
-function branch(x, y, len, angle, alpha, color) {
+function branch(x, y, len, angle, alpha, color, letter) {
     push();
     translate(x, y);
     rotate(angle);
@@ -21,12 +20,18 @@ function branch(x, y, len, angle, alpha, color) {
     strokeWeight(alpha / 255 * 4); // Vary stroke weight with alpha for bold lines
     line(0, 0, 0, -len);
 
-    if (len > 10) {  // Increase branching and make faster
+    if (len > 20) {  // Control branch density with larger threshold
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color); // Spread out more
-        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color); // Spread out more
-    } 
+        branch(nextX, nextY, len * 0.67, angle + PI / 4, alpha * 0.67, color, letter); // Spread out more
+        branch(nextX, nextY, len * 0.67, angle - PI / 4, alpha * 0.67, color, letter); // Spread out more
+    } else {  // Add letters at the end of branches
+        noStroke();
+        fill(255);
+        textSize(48); // Increase text size for more impact
+        textAlign(CENTER, CENTER);
+        text(letter, 0, -len); // Place letters centrally
+    }
 
     pop();
 }
@@ -41,7 +46,7 @@ function updateFractalVisual(letter, echoDepth = 3) {
     for (let i = 0; i < echoDepth; i++) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
-        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color });
+        branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color, letter: letter });
         letters.push({ x: x, y: y - len * scale, letter: letter, alpha: alpha, scale: scale }); // Store letter positions and alpha for echo effect
     }
     redraw(); // Trigger a redraw
@@ -52,8 +57,8 @@ function draw() {
 
     // Draw branches
     for (let b of branches) {
-        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color);
-        b.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
+        branch(b.x, b.y, b.len, b.angle, b.alpha, b.color, b.letter);
+        b.alpha -= 5; // Gradually decrease alpha to fade out
     }
 
     // Draw letters on top and moving through branches
@@ -65,7 +70,7 @@ function draw() {
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
         text(l.letter, 0, 0); // Draw letters on top
-        l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
+        l.alpha -= 5; // Gradually decrease alpha to fade out
         pop();
     }
 
