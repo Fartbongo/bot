@@ -7,6 +7,7 @@ const fadeSpeed = 1; // Adjust the speed at which fractals fade out
 const maxLetters = 10; // Increase the number of letters
 const bounceSpeed = 0.01; // Speed of letter bouncing
 let bgOffset = 0;
+let oldLetters = []; // Array for old bouncing letters
 
 function setup() {
     let canvas = createCanvas(1000, 800); // Slightly larger canvas size
@@ -68,6 +69,8 @@ function updateFractalVisual(letter, echoDepth = 3) {
     bgOffset += 0.05; // Move gradient for undulating effect
     branches = []; // Reset branches array
     letters = []; // Reset letters array
+    oldLetters.push({ letter: letter, color: colors[Math.floor(Math.random() * colors.length)], x: width / 2, y: height / 2, alpha: 255, size: 48 }); // Add to old letters
+
     let x = width / 2; // Center x position
     let y = height / 2; // Start from the middle of the canvas to raise visuals
     let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
@@ -106,6 +109,19 @@ function draw() {
         l.scale *= 0.95; // Reduce size of letters
         l.alpha -= fadeSpeed; // Gradually decrease alpha to fade out
         pop();
+    }
+
+    // Draw old bouncing letters on top
+    for (let i = oldLetters.length - 1; i >= 0; i--) {
+        let o = oldLetters[i];
+        fill(o.color);
+        textSize(o.size);
+        textAlign(CENTER, CENTER);
+        text(o.letter, o.x, o.y);
+        o.y += o.size * bounceSpeed * 5; // Make the letters bounce down
+        o.alpha -= fadeSpeed;
+        o.size *= 0.95;
+        if (o.alpha <= 0) oldLetters.splice(i, 1); // Remove letters that have fully faded
     }
 
     // Remove branches and letters that have fully dissipated
