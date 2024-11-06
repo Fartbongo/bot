@@ -37,13 +37,6 @@ function broadcastLetter(letter) {
     });
 }
 
-// Function to generate a simple fractal pattern
-function generateFractalPattern(depth) {
-    if (depth === 0) return 'a'; // Base case
-    const pattern = generateFractalPattern(depth - 1);
-    return pattern + pattern + pattern; // Fractal pattern
-}
-
 // Define a mapping for characters to notes
 const charToNote = {
     'a': 'a.wav', 'b': 'b.wav', 'c': 'c.wav',
@@ -86,8 +79,8 @@ function playNextInQueue() {
     });
 }
 
-function playFractalPattern(pattern) {
-    for (let char of pattern) {
+function playFractalPattern(message) {
+    for (let char of message.toLowerCase()) {
         if (char in charToNote) {
             let noteFile = path.join(__dirname, charToNote[char]);
             console.log(`Queuing: ${noteFile} for letter: ${char}`);
@@ -97,7 +90,7 @@ function playFractalPattern(pattern) {
             console.warn(`Character ${char} not mapped to any sound.`);
         }
     }
-    volume = 1; // Reset volume for each new pattern
+    volume = 1; // Reset volume for each new message
     if (!isPlaying) {
         playNextInQueue();
     }
@@ -117,6 +110,5 @@ client.on('message', (channel, tags, message, self) => {
     if (self) return; // Ignore messages from the bot itself
 
     console.log(`${tags['display-name']}: ${message}`);
-    const fractalPattern = generateFractalPattern(3); // Generate fractal pattern when a message is received
-    playFractalPattern(fractalPattern); // Play the generated fractal pattern
+    playFractalPattern(message); // Play the generated fractal pattern based on the chat message
 });

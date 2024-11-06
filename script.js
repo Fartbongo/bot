@@ -10,11 +10,10 @@ function setup() {
     background(0);
     stroke(255);
     translate(width / 2, height);
-    branch(len);
 }
 
-function branch(len) {
-    let newBranch = { x: 0, y: -len, len: len, angle: 0, alpha: 255 };
+function branch(len, letter) {
+    let newBranch = { x: 0, y: -len, len: len, angle: 0, alpha: 255, letter: letter };
     branches.push(newBranch);
     drawBranches();
 }
@@ -34,8 +33,8 @@ function drawBranches() {
 
         b.alpha -= 5; // Fade out the branch
         if (b.alpha > 0) {
-            let newBranch1 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle + angle, alpha: b.alpha };
-            let newBranch2 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle - angle, alpha: b.alpha };
+            let newBranch1 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle + angle, alpha: b.alpha, letter: b.letter };
+            let newBranch2 = { x: b.x, y: b.y - b.len, len: b.len * 0.67, angle: b.angle - angle, alpha: b.alpha, letter: b.letter };
             branches.push(newBranch1);
             branches.push(newBranch2);
         } else {
@@ -44,10 +43,12 @@ function drawBranches() {
     }
 }
 
-function updateFractalVisual() {
+function updateFractalVisual(message) {
     len = 100; // Reset the initial length
     branches = []; // Reset the branches array
-    branch(len); // Start the new fractal
+    for (let char of message.toLowerCase()) {
+        branch(len, char); // Create a new branch for each letter in the message
+    }
 }
 
 // WebSocket connection to the server
@@ -76,7 +77,7 @@ socket.onmessage = (event) => {
     const letter = event.data;
     console.log(`Received: ${letter}`);
     showLetter(letter);
-    updateFractalVisual(); // Trigger the fractal update
+    updateFractalVisual(letter); // Trigger the fractal update based on the letter
 };
 
 socket.onclose = () => {
