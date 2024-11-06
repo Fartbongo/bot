@@ -27,8 +27,8 @@ function branch(x, y, len, angle, alpha, color, depth = 0, letter) {
     if (len > 20) {  // Control branch density with larger threshold
         let nextX = 0;
         let nextY = -len;
-        branch(nextX, nextY, len * 0.67, angle + PI / 6, alpha * 0.67, color, depth + 1, letter); // Slow down branch movements
-        branch(nextX, nextY, len * 0.67, angle - PI / 6, alpha * 0.67, color, depth + 1, letter); // Slow down branch movements
+        branch(nextX, nextY, len * 0.67, angle + PI / 3, alpha * 0.67, color, depth + 1, letter); // Spread out branches more
+        branch(nextX, nextY, len * 0.67, angle - PI / 3, alpha * 0.67, color, depth + 1, letter); // Spread out branches more
     } else {  // Add letters at the end of branches
         drawFlower(0, -len, alpha, letter); // Draw flower shapes using letters
     }
