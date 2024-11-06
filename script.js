@@ -1,5 +1,5 @@
 let angle;
-let len = 200; // Increase initial length but in a controlled manner
+let len = 200; // Controlled initial length
 let branches = [];
 let letters = [];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
@@ -41,7 +41,7 @@ function updateFractalVisual(letter, echoDepth = 3) {
         let alpha = 255 * Math.pow(0.8, i); // Reduce alpha for each echo
         let scale = Math.pow(0.9, i); // Reduce size for each echo
         branches.push({ x: x, y: y, len: len * scale, angle: -PI / 2, alpha: alpha, color: color });
-        letters.push({ x: x, y: y, letter: letter, alpha: alpha }); // Store letter positions and alpha for echo effect
+        letters.push({ x: x, y: y - len * scale, letter: letter, alpha: alpha, scale: scale }); // Store letter positions and alpha for echo effect
     }
     redraw(); // Trigger a redraw
 }
@@ -54,13 +54,16 @@ function draw() {
         branch(b.x, b.y, b.len, b.angle, b.alpha, b.color);
     }
 
-    // Draw letters on top
+    // Draw letters on top and moving through branches
     for (let l of letters) {
-        noStroke();
+        push();
+        translate(l.x, l.y);
+        scale(l.scale); // Apply scaling for pulsating effect
         fill(255, l.alpha); // Apply alpha for echo effect
         textSize(48); // Increase text size for more impact
         textAlign(CENTER, CENTER);
-        text(l.letter, l.x, l.y); // Draw letters on top
+        text(l.letter, 0, 0); // Draw letters on top
+        pop();
     }
 
     // Remove branches and letters that have fully dissipated
