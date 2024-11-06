@@ -41,7 +41,7 @@ function updateFractalVisual(message) {
     branches = []; // Reset branches array
     letters = []; // Reset letters array
     let x = width / 2; // Center x position
-    let y = height; // Start at the bottom of the canvas
+    let y = height / 2; // Center y position
     for (let char of message.toLowerCase()) {
         let color = colors[Math.floor(Math.random() * colors.length)]; // Randomize colors
         branches.push({ x: x, y: y, len: len, angle: -PI / 2, alpha: 255, color: color, letter: char });
