@@ -27,6 +27,7 @@ export function setupWebSocket() {
 }
 
 export function showLetter(letter) {
+    const display = document.getElementById('display');
     const span = document.createElement('span');
     span.className = 'letter';
     span.textContent = letter;

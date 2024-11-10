@@ -29,12 +29,26 @@
             100% { top: 0; }
         }
         @keyframes distort {
-            0% { transform: skew(0deg, 0deg) rotate(0deg); }
-            25% { transform: skew(20deg, 10deg) rotate(5deg); }
+              25% { transform: skew(20deg, 10deg) rotate(5deg); }
+
             50% { transform: skew(-20deg, -10deg) rotate(-5deg); }
-            75% { transform: skew(20deg, 10deg) rotate(5deg); }
-            100% { transform: skew(0deg, 0deg) rotate(0deg); }
-        }
+
+             75% { transform: skew(20deg, 10deg) rotate(5deg); }
+
+              100% { transform: skew(0deg, 0deg) rotate(0deg); }
+
+           }
+
+  
+     
+     
+     
+     
+     
+     
+     
+     
+
         #canvasContainer {
             width: 100%;
             display: flex;

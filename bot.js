@@ -33,6 +33,9 @@ function broadcastLetter(letter) {
     wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(letter);
+            setTimeout(() => {
+                client.send(''); // Clear the display after sending the letter
+            }, 100); // Adjust the delay as needed
         }
     });
 }

@@ -1,4 +1,4 @@
-import { setupCanvas, drawCanvas } from './canvas.js';
+import { setupCanvas, drawCanvas, updateFractalVisual } from './canvas.js';
 import { setupWebSocket } from './websocket.js';
 
 function setup() {

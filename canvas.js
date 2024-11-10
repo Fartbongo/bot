@@ -1,18 +1,18 @@
-let angle;
-let len = 150;
+let angle; // Declare the angle variable
+const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
+const petals = 'abcdefghijklmnopqrstuvwxyz';
 let branches = [];
 let letters = [];
-const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#FF5733', '#33FF57', '#3357FF', '#FF33A133'];
-const fadeSpeed = 1;
-const maxLetters = 10;
-const bounceSpeed = 0.01;
-let bgOffset = 0;
 let oldLetters = [];
+let bgOffset = 0;
+let fadeSpeed = 2;
+let bounceSpeed = 0.1;
+let maxLetters = 10;
 
 export function setupCanvas() {
     let canvas = createCanvas(1000, 800);
     canvas.parent('canvasContainer');
-    angle = -PI / 4;
+    angle = -PI / 4; // Initialize the angle variable
     background(0);
     frameRate(60);
 }
@@ -77,8 +77,6 @@ function branch(x, y, len, angle, alpha, color, depth = 0, letter) {
     pop();
 }
 
-let petals = 'abcdefghijklmnopqrstuvwxyz';
-
 function drawFlower(x, y, alpha, letter) {
     let centerLetter = letter;
     fill(255, 255, 0, alpha + 100);
@@ -105,7 +103,7 @@ function drawGradient() {
     }
 }
 
-export function updateFractalVisual(letter, echoDepth = 3) {
+export function updateFractalVisual(letter, echoDepth = 3, len = 50) { // Added default value for len
     drawGradient();
     bgOffset += 0.05;
     branches = [];
